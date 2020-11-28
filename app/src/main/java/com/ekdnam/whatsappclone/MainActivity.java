@@ -23,22 +23,18 @@ import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
 
-    /**
-     * With EditText user can enter stuff
-     */
     private EditText mPhoneNumber, mCode;
     private Button mSend;
 
-    /**
-     * mCallbacks added in case authentication fails or something
-     */
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
 
-    private String mVerificationID;
+    String mVerificationId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         FirebaseApp.initializeApp(this);
 
         userIsLoggedIn();
@@ -48,58 +44,50 @@ public class MainActivity extends AppCompatActivity {
 
         mSend = findViewById(R.id.send);
 
-        /**
-         * if mSend button is clicked
-         */
         mSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mVerificationID != null){
+                if(mVerificationId != null)
                     verifyPhoneNumberWithCode();
-                }
-                else {
+                else
                     startPhoneNumberVerification();
-                }
             }
         });
 
+
         mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
             @Override
-            public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
+            public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
                 signInWithPhoneAuthCredential(phoneAuthCredential);
             }
 
             @Override
-            public void onVerificationFailed(@NonNull FirebaseException e) {
-
+            public void onVerificationFailed(FirebaseException e) {
             }
 
-            @Override
-            public void onCodeSent(@NonNull String verificationID, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
-                super.onCodeSent(verificationID, forceResendingToken);
 
-                mVerificationID = verificationID;
+            @Override
+            public void onCodeSent(String verificationId, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
+                super.onCodeSent(verificationId, forceResendingToken);
+
+                mVerificationId = verificationId;
                 mSend.setText("Verify Code");
             }
         };
+
     }
 
     private void verifyPhoneNumberWithCode(){
-        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationID, mCode.getText().toString());
+        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, mCode.getText().toString());
         signInWithPhoneAuthCredential(credential);
     }
-    /**
-     * Start user login process
-     *
-     * @param phoneAuthCredential
-     */
+
     private void signInWithPhoneAuthCredential(PhoneAuthCredential phoneAuthCredential) {
         FirebaseAuth.getInstance().signInWithCredential(phoneAuthCredential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful()){
+                if(task.isSuccessful())
                     userIsLoggedIn();
-                }
             }
         });
     }
@@ -113,17 +101,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Uses Firebase method to verify phone number
-     *
-     */
     private void startPhoneNumberVerification() {
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
-                mPhoneNumber.getText().toString(), // get number
-                60, // timeout = 60 units
-                TimeUnit.SECONDS, // units = seconds
+                mPhoneNumber.getText().toString(),
+                10,
+                TimeUnit.SECONDS,
                 this,
-                mCallbacks
-        );
+                mCallbacks);
     }
 }

@@ -1,11 +1,18 @@
-package com.ekdnam.whatsappclone;
+package com.ekdnam.whatsappclone.User;
 
 public class UserObject {
-    private String name, phone;
+    private String uid,
+            name,
+            phone;
 
-    public UserObject(String name, String phone){
+    public UserObject(String uid, String name, String phone){
         this.name = name;
         this.phone = phone;
+        this.uid = uid;
+    }
+
+    public String getUid() {
+        return uid;
     }
 
     public String getPhone() {

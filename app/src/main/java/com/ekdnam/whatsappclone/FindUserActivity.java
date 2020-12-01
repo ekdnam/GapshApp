@@ -12,6 +12,9 @@ import android.provider.ContactsContract;
 import android.telephony.TelephonyManager;
 import android.widget.LinearLayout;
 
+import com.ekdnam.whatsappclone.User.UserListAdapter;
+import com.ekdnam.whatsappclone.User.UserObject;
+import com.ekdnam.whatsappclone.Utils.CountryToPhonePrefix;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -58,7 +61,7 @@ public class FindUserActivity extends AppCompatActivity {
             if(!String.valueOf(phone.charAt(0)).equals("+"))
                 phone = ISOPrefix + phone;
 
-            UserObject mContact = new UserObject(name, phone);
+            UserObject mContact = new UserObject("", name, phone);
             contactList.add(mContact);
             getUserDetails(mContact);
         }
@@ -79,14 +82,14 @@ public class FindUserActivity extends AppCompatActivity {
                         if(childSnapshot.child("name").getValue()!=null)
                             name = childSnapshot.child("name").getValue().toString();
 
-                        UserObject mUser = new UserObject(name, phone);
-                        if(name.equals(phone)){
+
+                        UserObject mUser = new UserObject(childSnapshot.getKey(), name, phone);
+                        if (name.equals(phone))
                             for(UserObject mContactIterator : contactList){
                                 if(mContactIterator.getPhone().equals(mUser.getPhone())){
                                     mUser.setName(mContactIterator.getName());
                                 }
                             }
-                        }
 
                         userList.add(mUser);
                         mUserListAdapter.notifyDataSetChanged();
@@ -115,7 +118,6 @@ public class FindUserActivity extends AppCompatActivity {
         return CountryToPhonePrefix.getPhone(iso);
     }
 
-    @SuppressLint("WrongConstant")
     private void initializeRecyclerView() {
         mUserList= findViewById(R.id.userList);
         mUserList.setNestedScrollingEnabled(false);

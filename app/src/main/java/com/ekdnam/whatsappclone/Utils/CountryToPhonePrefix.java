@@ -1,4 +1,4 @@
-package com.ekdnam.whatsappclone;
+package com.ekdnam.whatsappclone.Utils;
 
 import java.util.HashMap;
 import java.util.Map;

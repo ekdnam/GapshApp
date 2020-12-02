@@ -21,12 +21,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         this.messageList = messageList;
     }
 
-    /**
-     *
-     * @param parent
-     * @param viewType
-     * @return
-     */
     @NonNull
     @Override
     public MessageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -49,8 +43,12 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         return messageList.size();
     }
 
+
+
+
+
     class MessageViewHolder extends RecyclerView.ViewHolder{
-        TextView mMessage,
+        TextView    mMessage,
                 mSender;
         LinearLayout mLayout;
         MessageViewHolder(View view){

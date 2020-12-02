@@ -13,6 +13,7 @@
         android:theme="@style/Theme.WhatsAppClone">
         <activity android:name=".FindUserActivity"></activity>
         <activity android:name=".MainPageActivity" />
+        <activity android:name=".ChatActivity"/>
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

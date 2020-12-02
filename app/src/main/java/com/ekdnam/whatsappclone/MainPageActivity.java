@@ -95,6 +95,7 @@ public class MainPageActivity extends AppCompatActivity {
         });
     }
 
+    @SuppressLint("WrongConstant")
     private void initializeRecyclerView() {
         chatList = new ArrayList<>();
         mChatList= findViewById(R.id.chatList);
@@ -106,6 +107,9 @@ public class MainPageActivity extends AppCompatActivity {
         mChatList.setAdapter(mChatListAdapter);
     }
 
+    /**
+     * Gets required permissions from user, like READ_CONTACTS and WRITE_CONTACTS
+     */
     private void getPermissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermissions(new String[]{Manifest.permission.WRITE_CONTACTS, Manifest.permission.READ_CONTACTS}, 1);

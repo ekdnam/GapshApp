@@ -45,11 +45,7 @@ public class ChatActivity extends AppCompatActivity {
 
         chatID = getIntent().getExtras().getString("chatID");
 
-        mChatDb = FirebaseDatabase
-                .getInstance()
-                .getReference()
-                .child("chat")
-                .child(chatID);
+        mChatDb = FirebaseDatabase.getInstance().getReference().child("chat").child(chatID);
 
         Button mSend = findViewById(R.id.send);
         mSend.setOnClickListener(new View.OnClickListener() {
@@ -68,44 +64,43 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 if(dataSnapshot.exists()){
-                    String text = "", creatorID = "";
-                    if(dataSnapshot.child("text").getValue() != null){
+                    String  text = "",
+                            creatorID = "";
+
+                    if(dataSnapshot.child("text").getValue() != null)
                         text = dataSnapshot.child("text").getValue().toString();
-                    }
-                    if(dataSnapshot.child("creator").getValue() != null){
+                    if(dataSnapshot.child("creator").getValue() != null)
                         creatorID = dataSnapshot.child("creator").getValue().toString();
-                    }
+
                     MessageObject mMessage = new MessageObject(dataSnapshot.getKey(), creatorID, text);
                     messageList.add(mMessage);
-                    mChatLayoutManager.scrollToPosition(messageList.size() - 1);
+                    mChatLayoutManager.scrollToPosition(messageList.size()-1);
                     mChatAdapter.notifyDataSetChanged();
                 }
             }
 
             @Override
-            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
             }
-
             @Override
-            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
 
             }
-
             @Override
-            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
             }
-
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
         });
+
     }
 
     private void sendMessage(){
-        EditText mMessage = findViewById(R.id.message);
+        EditText mMessage = findViewById(R.id.messageInput);
 
         if(!mMessage.getText().toString().isEmpty()){
             DatabaseReference newMessageDb = mChatDb.push();
@@ -118,6 +113,7 @@ public class ChatActivity extends AppCompatActivity {
         }
         mMessage.setText(null);
     }
+
 
 
     @SuppressLint("WrongConstant")

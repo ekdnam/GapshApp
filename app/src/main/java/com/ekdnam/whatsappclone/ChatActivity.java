@@ -42,7 +42,6 @@ public class ChatActivity extends AppCompatActivity {
     ArrayList<MessageObject> messageList;
 
     String chatID;
-
     DatabaseReference mChatDb;
 
     @Override

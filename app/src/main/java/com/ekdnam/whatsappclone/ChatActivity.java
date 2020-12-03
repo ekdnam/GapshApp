@@ -45,12 +45,11 @@ public class ChatActivity extends AppCompatActivity {
 
     DatabaseReference mChatDb;
 
-    EditText mMessage;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
-        mMessage = findViewById(R.id.messageInput);
+
         chatID = getIntent().getExtras().getString("chatID");
 
         mChatDb = FirebaseDatabase.getInstance().getReference().child("chat").child(chatID);
@@ -64,7 +63,6 @@ public class ChatActivity extends AppCompatActivity {
                 sendMessage();
             }
         });
-
         mAddMedia.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,8 +75,6 @@ public class ChatActivity extends AppCompatActivity {
         getChatMessages();
     }
 
-
-
     private void getChatMessages() {
         mChatDb.addChildEventListener(new ChildEventListener() {
             @Override
@@ -86,7 +82,6 @@ public class ChatActivity extends AppCompatActivity {
                 if(dataSnapshot.exists()){
                     String  text = "",
                             creatorID = "";
-
                     if(dataSnapshot.child("text").getValue() != null)
                         text = dataSnapshot.child("text").getValue().toString();
                     if(dataSnapshot.child("creator").getValue() != null)
@@ -121,64 +116,64 @@ public class ChatActivity extends AppCompatActivity {
 
     int totalMediaUploaded = 0;
     ArrayList<String> mediaIdList = new ArrayList<>();
+    EditText mMessage;
     private void sendMessage(){
+        mMessage = findViewById(R.id.messageInput);
+
+        String messageId = mChatDb.push().getKey();
+        final DatabaseReference newMessageDb = mChatDb.child(messageId);
+
+        final Map newMessageMap = new HashMap<>();
+
+        newMessageMap.put("creator", FirebaseAuth.getInstance().getUid());
+
+        if(!mMessage.getText().toString().isEmpty())
+            newMessageMap.put("text", mMessage.getText().toString());
 
 
-        if(!mMessage.getText().toString().isEmpty()){
-            String messageId = mChatDb.push().getKey();
-            DatabaseReference newMessageDb = mChatDb.child(messageId);
+        if(!mediaUriList.isEmpty()){
+            for (String mediaUri : mediaUriList){
+                String mediaId = newMessageDb.child("media").push().getKey();
+                mediaIdList.add(mediaId);
+                final StorageReference filePath = FirebaseStorage.getInstance().getReference().child("chat").child(chatID).child(messageId).child(mediaId);
 
+                UploadTask uploadTask = filePath.putFile(Uri.parse(mediaUri));
 
-            final Map newMessageMap = new HashMap<>();
+                uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        filePath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                newMessageMap.put("/media/" + mediaIdList.get(totalMediaUploaded) + "/", uri.toString());
 
-            newMessageMap.put("creator", FirebaseAuth.getInstance().getUid());
+                                totalMediaUploaded++;
+                                if(totalMediaUploaded == mediaUriList.size())
+                                    updateDatabaseWithNewMessage(newMessageDb, newMessageMap);
 
-//            newMessageDb.updateChildren(newMessageMap);
-
-            if(!mediaUriList.isEmpty()){
-                for(String mediaUri: mediaUriList){
-                    String mediaId = newMessageDb.child("media").push().getKey();
-                    mediaIdList.add(mediaId);
-                    final StorageReference filePath = FirebaseStorage.getInstance().getReference().child("chat").child(chatID).child(messageId).child(mediaId);
-
-                    UploadTask uploadTask = filePath.putFile(Uri.parse(mediaUri));
-
-                    uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            filePath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                @Override
-                                public void onSuccess(Uri uri) {
-                                    newMessageMap.put("/media/" + mediaIdList.get(totalMediaUploaded) + "/", uri.toString());
-
-                                    totalMediaUploaded++;
-                                    if(totalMediaUploaded == mediaUriList.size()){
-                                        updateDatabaseWithNewMessage(newMessageDb, newMessageMap);
-                                    }
-                                }
-                            });
-                        }
-                    });
-                }
+                            }
+                        });
+                    }
+                });
             }
-            else{
-                if(!mMessage.getText().toString().isEmpty()){
-                    newMessageMap.put("text", mMessage.getText().toString());
-                }
-            }
+        }else{
+            if(!mMessage.getText().toString().isEmpty())
+                updateDatabaseWithNewMessage(newMessageDb, newMessageMap);
         }
+
+
     }
+
 
     private void updateDatabaseWithNewMessage(DatabaseReference newMessageDb, Map newMessageMap){
         newMessageDb.updateChildren(newMessageMap);
-        mMessage.setText((null));
+        mMessage.setText(null);
         mediaUriList.clear();
         mediaIdList.clear();
+        totalMediaUploaded=0;
         mMediaAdapter.notifyDataSetChanged();
     }
 
-    int PICK_IMAGE_INTENT = 1;
-    ArrayList<String> mediaUriList = new ArrayList<>();
     @SuppressLint("WrongConstant")
     private void initializeMessage() {
         messageList = new ArrayList<>();
@@ -192,10 +187,14 @@ public class ChatActivity extends AppCompatActivity {
     }
 
 
+
+    int PICK_IMAGE_INTENT = 1;
+    ArrayList<String> mediaUriList = new ArrayList<>();
+
     @SuppressLint("WrongConstant")
     private void initializeMedia() {
-        messageList = new ArrayList<>();
-        mMedia= findViewById(R.id.messageList);
+        mediaUriList = new ArrayList<>();
+        mMedia= findViewById(R.id.mediaList);
         mMedia.setNestedScrollingEnabled(false);
         mMedia.setHasFixedSize(false);
         mMediaLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayout.HORIZONTAL, false);
@@ -204,27 +203,27 @@ public class ChatActivity extends AppCompatActivity {
         mMedia.setAdapter(mMediaAdapter);
     }
 
-    private void openGallery(){
+    private void openGallery() {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         intent.setAction(intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Image(s)"), PICK_IMAGE_INTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture(s)"), PICK_IMAGE_INTENT);
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode == RESULT_OK){
             if(requestCode == PICK_IMAGE_INTENT){
-                if(data.getClipData() == null) {
+                if(data.getClipData() == null){
                     mediaUriList.add(data.getData().toString());
-                }
-                else{
+                }else{
                     for(int i = 0; i < data.getClipData().getItemCount(); i++){
                         mediaUriList.add(data.getClipData().getItemAt(i).getUri().toString());
                     }
                 }
+
                 mMediaAdapter.notifyDataSetChanged();
             }
         }

@@ -18,6 +18,7 @@ import com.ekdnam.whatsappclone.Chat.ChatListAdapter;
 import com.ekdnam.whatsappclone.Chat.ChatObject;
 import com.ekdnam.whatsappclone.User.UserListAdapter;
 import com.ekdnam.whatsappclone.User.UserObject;
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -40,6 +41,7 @@ public class MainPageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_page);
 
+        Fresco.initialize(this);
 
         Button mLogout = findViewById(R.id.logout);
         Button mFindUser = findViewById(R.id.findUser);

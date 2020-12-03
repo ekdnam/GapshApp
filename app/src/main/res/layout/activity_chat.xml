@@ -16,21 +16,38 @@
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:id="@+id/sendLayout">
-        <EditText
-            android:layout_weight="0.8"
-            android:layout_width="0dp"
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/messageInput"
-            android:hint="message..."/>
-        <Button
-            android:layout_weight="0.2"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="Send"
-            android:id="@+id/send"/>
+            android:id="@+id/medialList">
 
+        </androidx.recyclerview.widget.RecyclerView>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <EditText
+                android:layout_weight="0.8"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/messageInput"
+                android:hint="message..."/>
+            <Button
+                android:layout_weight="0.2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Attach media"
+                android:id="@+id/addMedia"/>
+            <Button
+                android:layout_weight="0.2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Send"
+                android:id="@+id/send"/>
+
+        </LinearLayout>
     </LinearLayout>
 
 </RelativeLayout>

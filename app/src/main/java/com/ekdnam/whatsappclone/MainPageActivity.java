@@ -27,9 +27,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import com.onesignal.OneSignal;
 
 public class MainPageActivity extends AppCompatActivity {
 
+//    private static final String ONESIGNAL_APP_ID = "########-####-####-####-############";
     private RecyclerView mChatList;
     private RecyclerView.Adapter mChatListAdapter;
     private RecyclerView.LayoutManager mChatListLayoutManager;

@@ -15,14 +15,27 @@ import com.stfalcon.frescoimageviewer.ImageViewer;
 
 import java.util.ArrayList;
 
+/**
+ *
+ */
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHolder> {
 
     ArrayList<MessageObject> messageList;
 
+    /**
+     *
+     * @param messageList
+     */
     public MessageAdapter(ArrayList<MessageObject> messageList){
         this.messageList = messageList;
     }
 
+    /**
+     *
+     * @param parent
+     * @param viewType
+     * @return
+     */
     @NonNull
     @Override
     public MessageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -34,6 +47,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         return rcv;
     }
 
+    /**
+     *
+     * @param holder
+     * @param position
+     */
     @Override
     public void onBindViewHolder(@NonNull MessageViewHolder holder, final int position) {
         holder.mMessage.setText(messageList.get(position).getMessage());
@@ -51,15 +69,18 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         });
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public int getItemCount() {
         return messageList.size();
     }
 
-
-
-
-
+    /**
+     *
+     */
     class MessageViewHolder extends RecyclerView.ViewHolder{
         TextView    mMessage,
                 mSender;

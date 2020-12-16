@@ -1,5 +1,9 @@
 package com.ekdnam.whatsappclone.Chat;
 
+/**
+ * A simple class which encapsulates the data required to differentiate a chat, its unique id.
+ *
+ */
 public class ChatObject {
     private String chatId;
 

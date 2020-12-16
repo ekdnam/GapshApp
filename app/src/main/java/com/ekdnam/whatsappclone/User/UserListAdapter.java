@@ -15,14 +15,25 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
+/**
+ *
+ */
 public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserListViewHolder> {
 
     ArrayList<UserObject> userList;
 
-    public UserListAdapter(ArrayList<UserObject> userList){
+    /**
+     * @param userList
+     */
+    public UserListAdapter(ArrayList<UserObject> userList) {
         this.userList = userList;
     }
 
+    /**
+     * @param parent
+     * @param viewType
+     * @return
+     */
     @NonNull
     @Override
     public UserListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -34,6 +45,10 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserLi
         return rcv;
     }
 
+    /**
+     * @param holder
+     * @param position
+     */
     @Override
     public void onBindViewHolder(@NonNull UserListViewHolder holder, final int position) {
         holder.mName.setText(userList.get(position).getName());
@@ -51,19 +66,22 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserLi
         });
     }
 
+    /**
+     * @return
+     */
     @Override
     public int getItemCount() {
         return userList.size();
     }
 
-
-
-
-
-    public class UserListViewHolder extends RecyclerView.ViewHolder{
+    /**
+     *
+     */
+    public class UserListViewHolder extends RecyclerView.ViewHolder {
         public TextView mName, mPhone;
         public LinearLayout mLayout;
-        public UserListViewHolder(View view){
+
+        public UserListViewHolder(View view) {
             super(view);
             mName = view.findViewById(R.id.name);
             mPhone = view.findViewById(R.id.phone);

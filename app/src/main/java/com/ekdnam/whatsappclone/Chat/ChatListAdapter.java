@@ -18,13 +18,20 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
+/**
+ * Allows us to show the chats fetched from Firebase in a RecylerView.
+ */
 public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatListViewHolder> {
 
     ArrayList<ChatObject> chatList;
 
-    public ChatListAdapter(ArrayList<ChatObject> chatList){
+    /**
+     * @param chatList The chats fetched from Firebase for a specific pair of users
+     */
+    public ChatListAdapter(ArrayList<ChatObject> chatList) {
         this.chatList = chatList;
     }
+
 
     @NonNull
     @Override
@@ -53,19 +60,25 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatLi
         });
     }
 
+    /**
+     * @return size of chatList
+     */
     @Override
     public int getItemCount() {
         return chatList.size();
     }
 
-
-
-
-
-    public class ChatListViewHolder extends RecyclerView.ViewHolder{
+    /**
+     * Is used to depict the current position and metadata of an item view in a RecyclerView
+     */
+    public class ChatListViewHolder extends RecyclerView.ViewHolder {
         public TextView mTitle;
         public LinearLayout mLayout;
-        public ChatListViewHolder(View view){
+
+        /**
+         * @param view the current view of the mobile screen
+         */
+        public ChatListViewHolder(View view) {
             super(view);
             mTitle = view.findViewById(R.id.title);
             mLayout = view.findViewById(R.id.layout);

@@ -54,7 +54,7 @@ public class LoginActivity extends AppCompatActivity {
         mSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mVerificationId != null)
+                if (mVerificationId != null)
                     verifyPhoneNumberWithCode();
                 else
                     startPhoneNumberVerification();
@@ -84,7 +84,7 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private void verifyPhoneNumberWithCode(){
+    private void verifyPhoneNumberWithCode() {
         PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, mCode.getText().toString());
         signInWithPhoneAuthCredential(credential);
     }
@@ -93,16 +93,16 @@ public class LoginActivity extends AppCompatActivity {
         FirebaseAuth.getInstance().signInWithCredential(phoneAuthCredential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful()){
+                if (task.isSuccessful()) {
 
                     final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-                    if(user != null){
+                    if (user != null) {
                         final DatabaseReference mUserDB = FirebaseDatabase.getInstance().getReference().child("user").child(user.getUid());
                         mUserDB.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                if(!dataSnapshot.exists()){
+                                if (!dataSnapshot.exists()) {
                                     Map<String, Object> userMap = new HashMap<>();
                                     userMap.put("phone", user.getPhoneNumber());
                                     userMap.put("name", user.getPhoneNumber());
@@ -126,7 +126,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void userIsLoggedIn() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if(user != null){
+        if (user != null) {
             startActivity(new Intent(getApplicationContext(), MainPageActivity.class));
             finish();
             return;

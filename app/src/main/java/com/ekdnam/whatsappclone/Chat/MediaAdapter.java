@@ -15,15 +15,30 @@ import com.ekdnam.whatsappclone.R;
 
 import java.util.ArrayList;
 
+/**
+ *
+ */
 public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.MediaViewHolder>{
 
     ArrayList<String> mediaList;
     Context context;
+
+    /**
+     *
+     * @param context
+     * @param mediaList
+     */
     public MediaAdapter(Context context, ArrayList<String> mediaList){
         this.context = context;
         this.mediaList = mediaList;
     }
 
+    /**
+     *
+     * @param parent
+     * @param viewType
+     * @return
+     */
     @NonNull
     @Override
     public MediaViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -32,16 +47,28 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.MediaViewHol
         return mediaViewHolder;
     }
 
+    /**
+     *
+     * @param holder
+     * @param position
+     */
     @Override
     public void onBindViewHolder(@NonNull MediaViewHolder holder, int position) {
         Glide.with(context).load(Uri.parse(mediaList.get(position))).into(holder.mMedia);
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public int getItemCount() {
         return mediaList.size();
     }
 
+    /**
+     *
+     */
     public class MediaViewHolder extends RecyclerView.ViewHolder{
 
         ImageView mMedia;

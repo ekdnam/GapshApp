@@ -3,14 +3,25 @@ package com.ekdnam.whatsappclone.Utils;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * From phone number, get's unique Country Code.
+ */
 public class CountryToPhonePrefix {
+    /**
+     *
+     * @param code country code
+     * @return the
+     */
     public static String getPhone(String code) {
         return country2phone.get(code.toUpperCase());
     }
-    public static Map<String, String> getAll(){
+
+    public static Map<String, String> getAll() {
         return country2phone;
     }
+
     private static Map<String, String> country2phone = new HashMap<String, String>();
+
     static {
         country2phone.put("AF", "+93");
         country2phone.put("AL", "+355");

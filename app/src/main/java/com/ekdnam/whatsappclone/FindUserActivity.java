@@ -37,19 +37,19 @@ public class FindUserActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_user);
 
-        contactList= new ArrayList<>();
-        userList= new ArrayList<>();
+        contactList = new ArrayList<>();
+        userList = new ArrayList<>();
 
         initializeRecyclerView();
         getContactList();
     }
 
-    private void getContactList(){
+    private void getContactList() {
 
         String ISOPrefix = getCountryISO();
 
         Cursor phones = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null);
-        while(phones.moveToNext()){
+        while (phones.moveToNext()) {
             String name = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
             String phone = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
 
@@ -58,7 +58,7 @@ public class FindUserActivity extends AppCompatActivity {
             phone = phone.replace("(", "");
             phone = phone.replace(")", "");
 
-            if(!String.valueOf(phone.charAt(0)).equals("+"))
+            if (!String.valueOf(phone.charAt(0)).equals("+"))
                 phone = ISOPrefix + phone;
 
             UserObject mContact = new UserObject("", name, phone);
@@ -73,20 +73,20 @@ public class FindUserActivity extends AppCompatActivity {
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()){
-                    String  phone = "",
+                if (dataSnapshot.exists()) {
+                    String phone = "",
                             name = "";
-                    for(DataSnapshot childSnapshot : dataSnapshot.getChildren()){
-                        if(childSnapshot.child("phone").getValue()!=null)
+                    for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
+                        if (childSnapshot.child("phone").getValue() != null)
                             phone = childSnapshot.child("phone").getValue().toString();
-                        if(childSnapshot.child("name").getValue()!=null)
+                        if (childSnapshot.child("name").getValue() != null)
                             name = childSnapshot.child("name").getValue().toString();
 
 
                         UserObject mUser = new UserObject(childSnapshot.getKey(), name, phone);
                         if (name.equals(phone))
-                            for(UserObject mContactIterator : contactList){
-                                if(mContactIterator.getPhone().equals(mUser.getPhone())){
+                            for (UserObject mContactIterator : contactList) {
+                                if (mContactIterator.getPhone().equals(mUser.getPhone())) {
                                     mUser.setName(mContactIterator.getName());
                                 }
                             }
@@ -106,20 +106,20 @@ public class FindUserActivity extends AppCompatActivity {
     }
 
 
-
-    private String getCountryISO(){
+    private String getCountryISO() {
         String iso = null;
 
         TelephonyManager telephonyManager = (TelephonyManager) getApplicationContext().getSystemService(getApplicationContext().TELEPHONY_SERVICE);
-        if(telephonyManager.getNetworkCountryIso()!=null)
+        if (telephonyManager.getNetworkCountryIso() != null)
             if (!telephonyManager.getNetworkCountryIso().toString().equals(""))
                 iso = telephonyManager.getNetworkCountryIso().toString();
 
         return CountryToPhonePrefix.getPhone(iso);
     }
 
+    @SuppressLint("WrongConstant")
     private void initializeRecyclerView() {
-        mUserList= findViewById(R.id.userList);
+        mUserList = findViewById(R.id.userList);
         mUserList.setNestedScrollingEnabled(false);
         mUserList.setHasFixedSize(false);
         mUserListLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayout.VERTICAL, false);

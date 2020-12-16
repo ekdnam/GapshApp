@@ -33,6 +33,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ *
+ */
 public class ChatActivity extends AppCompatActivity {
 
     private RecyclerView mChat, mMedia;
@@ -44,6 +47,10 @@ public class ChatActivity extends AppCompatActivity {
     String chatID;
     DatabaseReference mChatDb;
 
+    /**
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,12 +63,18 @@ public class ChatActivity extends AppCompatActivity {
         Button mSend = findViewById(R.id.send);
         Button mAddMedia = findViewById(R.id.addMedia);
 
+        /**
+         *
+         */
         mSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 sendMessage();
             }
         });
+        /**
+         *
+         */
         mAddMedia.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,6 +87,9 @@ public class ChatActivity extends AppCompatActivity {
         getChatMessages();
     }
 
+    /**
+     *
+     */
     private void getChatMessages() {
         mChatDb.addChildEventListener(new ChildEventListener() {
             @Override
@@ -170,6 +186,11 @@ public class ChatActivity extends AppCompatActivity {
     }
 
 
+    /**
+     *
+     * @param newMessageDb
+     * @param newMessageMap
+     */
     private void updateDatabaseWithNewMessage(DatabaseReference newMessageDb, Map newMessageMap){
         newMessageDb.updateChildren(newMessageMap);
         mMessage.setText(null);
@@ -179,6 +200,9 @@ public class ChatActivity extends AppCompatActivity {
         mMediaAdapter.notifyDataSetChanged();
     }
 
+    /**
+     *
+     */
     @SuppressLint("WrongConstant")
     private void initializeMessage() {
         messageList = new ArrayList<>();
@@ -196,6 +220,9 @@ public class ChatActivity extends AppCompatActivity {
     int PICK_IMAGE_INTENT = 1;
     ArrayList<String> mediaUriList = new ArrayList<>();
 
+    /**
+     *
+     */
     @SuppressLint("WrongConstant")
     private void initializeMedia() {
         mediaUriList = new ArrayList<>();
@@ -208,6 +235,9 @@ public class ChatActivity extends AppCompatActivity {
         mMedia.setAdapter(mMediaAdapter);
     }
 
+    /**
+     *
+     */
     private void openGallery() {
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -216,6 +246,12 @@ public class ChatActivity extends AppCompatActivity {
         startActivityForResult(Intent.createChooser(intent, "Select Picture(s)"), PICK_IMAGE_INTENT);
     }
 
+    /**
+     *
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

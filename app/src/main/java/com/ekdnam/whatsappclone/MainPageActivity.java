@@ -68,17 +68,17 @@ public class MainPageActivity extends AppCompatActivity {
         getUserChatList();
     }
 
-    private void getUserChatList(){
+    private void getUserChatList() {
         DatabaseReference mUserChatDB = FirebaseDatabase.getInstance().getReference().child("user").child(FirebaseAuth.getInstance().getUid()).child("chat");
 
         mUserChatDB.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()){
-                    for (DataSnapshot childSnapshot : dataSnapshot.getChildren()){
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
                         ChatObject mChat = new ChatObject(childSnapshot.getKey());
-                        boolean  exists = false;
-                        for (ChatObject mChatIterator : chatList){
+                        boolean exists = false;
+                        for (ChatObject mChatIterator : chatList) {
                             if (mChatIterator.getChatId().equals(mChat.getChatId()))
                                 exists = true;
                         }
@@ -100,7 +100,7 @@ public class MainPageActivity extends AppCompatActivity {
     @SuppressLint("WrongConstant")
     private void initializeRecyclerView() {
         chatList = new ArrayList<>();
-        mChatList= findViewById(R.id.chatList);
+        mChatList = findViewById(R.id.chatList);
         mChatList.setNestedScrollingEnabled(false);
         mChatList.setHasFixedSize(false);
         mChatListLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayout.VERTICAL, false);
